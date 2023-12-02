@@ -47,7 +47,7 @@ const Message = ({ isMe, message, showAvatar, isLoading }) => (
   <Container isMe={isMe}>
     <Stack direction="row" spacing={1} alignItems="flex-end">
       {showAvatar ? (
-        <StyledAvatar alt={userName} src="/avatar.png" />
+        <StyledAvatar alt={userName} src="/chatbot.gif" />
       ) : (
         <Box width={48} height={48} />
       )}
