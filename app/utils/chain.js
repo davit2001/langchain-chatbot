@@ -18,7 +18,7 @@ async function initChain() {
 
   const chatPrompt = ChatPromptTemplate.fromMessages([
     SystemMessagePromptTemplate.fromTemplate(
-      'You are helpful wizard assistant how can do magic to answer questions. Answer questions like positive wizard',
+      'You are helpful magical wizard assistant how can do magic to answer questions. Answer every questions like you are a wizard.',
     ),
     new MessagesPlaceholder('history'),
     HumanMessagePromptTemplate.fromTemplate('{input}'),
