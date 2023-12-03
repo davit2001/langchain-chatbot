@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -56,9 +56,6 @@ const Title = styled(Typography)({
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState(initialMessages);
-  const chatbotLastMessageIndex = useMemo(() => {
-    return messages.findLastIndex(({ role }) => role === roleTypes.ASSISTANT);
-  }, [messages]);
 
   const onSend = useCallback(
     content => {
@@ -98,16 +95,16 @@ export default function Home() {
       </Box>
       <Layout>
         <MessageOverflow>
-          {messages.map(({ role, content }, index) => (
+          {messages.map(({ role, content }) => (
             <Message
               key={content}
               isMe={role === roleTypes.USER}
               message={content}
-              showAvatar={index === chatbotLastMessageIndex}
+              showAvatar={role === roleTypes.ASSISTANT}
             />
           ))}
           {isLoading && (
-            <Message isMe={false} message={texts.loadingMessage} isLoading={isLoading} />
+            <Message isMe={false} message={texts.loadingMessage} isLoading={isLoading} showAvatar />
           )}
         </MessageOverflow>
         <SearchBar onSend={onSend} />
