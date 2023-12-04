@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useState } from 'react';
+import { SnackbarProvider } from 'notistack';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -89,26 +90,33 @@ export default function Home() {
   );
 
   return (
-    <Container>
-      <Box>
-        <Title>{texts.title}</Title>
-      </Box>
-      <Layout>
-        <MessageOverflow>
-          {messages.map(({ role, content }) => (
-            <Message
-              key={content}
-              isMe={role === roleTypes.USER}
-              message={content}
-              showAvatar={role === roleTypes.ASSISTANT}
-            />
-          ))}
-          {isLoading && (
-            <Message isMe={false} message={texts.loadingMessage} isLoading={isLoading} showAvatar />
-          )}
-        </MessageOverflow>
-        <SearchBar onSend={onSend} />
-      </Layout>
-    </Container>
+    <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+      <Container>
+        <Box>
+          <Title>{texts.title}</Title>
+        </Box>
+        <Layout>
+          <MessageOverflow>
+            {messages.map(({ role, content }) => (
+              <Message
+                key={content}
+                isMe={role === roleTypes.USER}
+                message={content}
+                showAvatar={role === roleTypes.ASSISTANT}
+              />
+            ))}
+            {isLoading && (
+              <Message
+                isMe={false}
+                message={texts.loadingMessage}
+                isLoading={isLoading}
+                showAvatar
+              />
+            )}
+          </MessageOverflow>
+          <SearchBar onSend={onSend} />
+        </Layout>
+      </Container>
+    </SnackbarProvider>
   );
 }

@@ -16,6 +16,7 @@
     "@mui/system": "^5.14.19",
     "langchain": "^0.0.200",
     "next": "14.0.3",
+    "notistack": "^3.0.1",
     "react": "^18",
     "react-dom": "^18"
   },

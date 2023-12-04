@@ -1,9 +1,15 @@
 import { useCallback, useState } from 'react';
+import { useSnackbar } from 'notistack';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import { Tooltip } from '@mui/material';
+import UploadDocumentsButton from '@/components/UploadDocumentsButton';
+import FileUtil from '@/app/utils/file.util';
+import AttachmentCard from '@/components/AttachmentCard';
 
 const Wrapper = styled(Box)(({ theme }) => ({
   backgroundColor: '#e5e5e5',
@@ -11,8 +17,8 @@ const Wrapper = styled(Box)(({ theme }) => ({
   boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
   width: '100%',
   display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+  flexDirection: 'column',
+  justifyContent: 'center',
   gap: theme.spacing(1),
 }));
 
@@ -48,6 +54,9 @@ const StyledInput = styled(TextField)(({ theme }) => ({
 
 const SearchBar = ({ onSend }) => {
   const [inputValue, setInputValue] = useState('');
+  const [file, setFile] = useState(null);
+  const { enqueueSnackbar } = useSnackbar();
+
   const onChangeInputValue = useCallback(event => {
     setInputValue(event.target.value);
   }, []);
@@ -67,19 +76,62 @@ const SearchBar = ({ onSend }) => {
     [onSendClick],
   );
 
+  const onUploadDocuments = useCallback(
+    async event => {
+      const firstFile = event.target.files[0];
+      const { isSupported, type } = await FileUtil.checkMimeTypeInList(firstFile, ['pdf']);
+
+      if (!isSupported) {
+        enqueueSnackbar(`File ${type} type not supported`, {
+          variant: 'error',
+          autoHideDuration: 3000,
+        });
+        return;
+      }
+
+      setFile({
+        name: firstFile.name,
+        extension: type,
+        size: FileUtil.formatFileSize(firstFile.size),
+      });
+    },
+    [enqueueSnackbar],
+  );
+
+  const onRemove = useCallback(() => {
+    setFile(null);
+  }, []);
+
   return (
     <Wrapper>
-      <StyledInput
-        value={inputValue}
-        onChange={onChangeInputValue}
-        onKeyUp={onKeyUp}
-        placeholder="Type your message here and let the magic happen 🧙"
-        multiline
-        maxRows={6}
-      />
-      <IconButton onClick={onSendClick}>
-        <SendIcon sx={{ color: 'rgb(131, 58, 180)' }} />
-      </IconButton>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" gap={1}>
+        <StyledInput
+          value={inputValue}
+          onChange={onChangeInputValue}
+          onKeyUp={onKeyUp}
+          placeholder="Type your message here and let the magic happen 🧙"
+          multiline
+          maxRows={6}
+        />
+        <Stack direction="row">
+          <UploadDocumentsButton onUploadDocuments={onUploadDocuments} />
+          <Tooltip title="Send" placement="top">
+            <IconButton onClick={onSendClick}>
+              <SendIcon sx={{ color: 'rgb(131, 58, 180)' }} />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      </Stack>
+      {file && (
+        <Box ml={1} mb={1}>
+          <AttachmentCard
+            name={file.name}
+            extension={file.extension}
+            size={file.size}
+            onRemove={onRemove}
+          />
+        </Box>
+      )}
     </Wrapper>
   );
 };
