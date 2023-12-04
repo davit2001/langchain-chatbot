@@ -16,7 +16,9 @@ const toDataURL = src =>
     reader.readAsDataURL(src);
   });
 
-export default {
+const FileReaderUtils = {
   toArrayBuffer,
   toDataURL,
 };
+
+export default FileReaderUtils;

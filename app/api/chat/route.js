@@ -1,6 +1,6 @@
 import { roleTypes } from '@/constants/message';
 import { NextResponse } from 'next/server';
-import { chain } from '../../utils/chain';
+import { chain } from '@/utils/chain';
 
 export async function POST(request) {
   const { question } = await request.json();

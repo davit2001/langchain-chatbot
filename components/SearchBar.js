@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Tooltip } from '@mui/material';
 import UploadDocumentsButton from '@/components/UploadDocumentsButton';
-import FileUtil from '@/app/utils/file.util';
+import FileUtil from '@/utils/file.util';
 import AttachmentCard from '@/components/AttachmentCard';
 
 const Wrapper = styled(Box)(({ theme }) => ({
